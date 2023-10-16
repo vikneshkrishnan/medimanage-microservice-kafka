@@ -3,8 +3,10 @@ import {ClientKafka, EventPattern, Payload} from "@nestjs/microservices";
 import {PatientDto} from "./dto/patient.dto";
 import {Observable} from "rxjs";
 import {Patient} from "./interfaces/patient.interface";
+import { ApiTags } from '@nestjs/swagger';
 
 @Controller('patient')
+@ApiTags('patient')
 export class PatientController implements OnModuleInit, OnModuleDestroy {
   constructor(
     @Inject('PATIENT_SERVICE') private patientClient: ClientKafka,
@@ -32,7 +34,7 @@ export class PatientController implements OnModuleInit, OnModuleDestroy {
     return this.patientClient.send('patient_created', patient);
   }
 
-  @Get('patients')
+  @Get()
   getPatients() :Promise<Patient> {
     return this.patientClient.send<Patient>('patient_lists', {}).toPromise();
   }
